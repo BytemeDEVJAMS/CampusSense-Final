@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import Benefits from "@/components/Benefits";
-import CTA from "@/components/CTA";
+
 
 const Index = () => {
   return (
@@ -9,7 +9,7 @@ const Index = () => {
       <Hero />
       <HowItWorks />
       <Benefits />
-      <CTA />
+      
     </div>
   );
 };

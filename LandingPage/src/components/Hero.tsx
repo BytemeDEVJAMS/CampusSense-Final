@@ -37,41 +37,26 @@ const Hero = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button 
-                variant="hero" 
-                size="lg" 
-                className="text-lg px-8 py-6 h-auto group font-bold"
-              >
-                <Smartphone className="w-5 h-5" />
-                Launch App
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <a 
+                  href="/ui.html" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                      <Button 
+                        variant="hero" 
+                        size="lg" 
+                        className="text-lg px-8 py-6 h-auto group font-bold"
+                      >
+                        <Smartphone className="w-5 h-5" />
+                        Launch App
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </a>
               
-              <Button 
-                variant="glass" 
-                size="lg" 
-                className="text-lg px-8 py-6 h-auto"
-              >
-                How it works 🤔
-              </Button>
+              
             </div>
 
-            <div className="flex items-center justify-center lg:justify-start gap-6 pt-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">10K+</div>
-                <div className="text-sm text-muted-foreground">Students using</div>
-              </div>
-              <div className="w-px h-8 bg-border" />
-              <div className="text-center">
-                <div className="text-2xl font-bold text-secondary">Real-time</div>
-                <div className="text-sm text-muted-foreground">Live updates</div>
-              </div>
-              <div className="w-px h-8 bg-border" />
-              <div className="text-center">
-                <div className="text-2xl font-bold text-accent">24/7</div>
-                <div className="text-sm text-muted-foreground">Always on</div>
-              </div>
-            </div>
+            
           </div>
           
           {/* Right Column - Phone Visual */}
