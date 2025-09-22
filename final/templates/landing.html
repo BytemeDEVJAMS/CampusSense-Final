@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Agdasima&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        agdasima: ['Agdasima', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            @apply bg-black overflow-hidden;
+        }
+
+        /* Animated gradient background with new colors */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #000000, #2c002c, #000000, #690069);
+            background-size: 400% 400%;
+            animation: gradient-bg 25s ease infinite;
+        }
+
+        @keyframes gradient-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glow animation for the launch button */
+        .glow-button {
+            position: relative;
+            z-index: 1;
+        }
+
+        .glow-button::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: rgba(165, 0, 165, 0.4);
+            border-radius: 9999px;
+            filter: blur(5px);
+            z-index: -1;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            to {
+                transform: scale(1.05);
+                opacity: 0.6;
+            }
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .ui-container {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Hamburger menu styles */
+        .hamburger-menu {
+            cursor: pointer;
+            z-index: 30;
+            transition: transform 0.3s ease-in-out;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hamburger-menu span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            margin: 4px 0;
+            background-color: white;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Animate the icon to an 'X' */
+        .hamburger-menu.active .top-bar {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger-menu.active .middle-bar {
+            opacity: 0;
+        }
+
+        .hamburger-menu.active .bottom-bar {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+
+        /* Dropdown menu styles */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px;
+            @apply bg-gray-800 bg-opacity-70 p-4 rounded-b-xl shadow-xl transition-all duration-300;
+            transform: translateY(-10px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .dropdown-menu.visible {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Typing effect styles */
+        .typing-container {
+            display: inline-block;
+            font-family: 'Agdasima', sans-serif;
+            font-weight: bold;
+        }
+
+        .typing-cursor {
+            border-right: 2px solid white;
+            animation: blink-caret 0.75s step-end infinite;
+            vertical-align: bottom;
+        }
+
+        /* Blinking cursor animation */
+        @keyframes blink-caret {
+            from, to { border-right-color: transparent; }
+            50% { border-right-color: white; }
+        }
+    </style>
+</head>
+<body class="bg-black overflow-hidden animated-gradient">
+
+    <!-- Top Bar -->
+    <div class="fixed top-0 left-0 w-full bg-black text-white p-4 flex items-center justify-between z-10">
+        <span class="text-xl font-bold">CampusSense</span>
+        <div class="relative flex items-center space-x-4">
+            <img src="uploaded:vit logo.jpg" alt="VIT Logo" class="h-8">
+            <!-- Hamburger Icon -->
+            <div id="hamburgerIcon" class="hamburger-menu">
+                <span class="top-bar"></span>
+                <span class="middle-bar"></span>
+                <span class="bottom-bar"></span>
+            </div>
+            
+            <!-- Dropdown Menu -->
+            <div id="dropdownMenu" class="dropdown-menu">
+                <div class="py-2 px-4 text-white font-agdasima text-lg">
+                    <h2 class="font-bold text-base mb-1">Made by Byte_me</h2>
+                    <p>for Devjams'25 - VIT VELLORE</p>
+                </div>
+                <button class="w-full text-left py-2 px-4 rounded-full border border-white hover:bg-gray-700 transition-colors duration-200">
+                    Login
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas for the particle background -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- UI Container -->
+    <div class="ui-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 bg-opacity-50 p-10 rounded-xl shadow-2xl text-center w-full max-w-md mx-4 z-5">
+        <h1 class="mb-4 text-white text-4xl sm:text-5xl font-bold">
+            <span id="typed-text" class="typing-container"></span>
+        </h1>
+        <p class="text-white text-lg font-light mb-8">
+            Skip the crowds, find the vibes. Real-time campus intel that actually hits different
+        </p>
+        <button class="glow-button bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 px-6 rounded-full transition duration-300 transform hover:scale-105">
+           <a href='/main' target="_blank">Launch</a> 
+        </button>
+    </div>
+
+
+    <script>
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        const particles = [];
+        const maxParticles = 150;
+        const connectDistance = 100; // The maximum distance for particles to connect
+        const heatDistance = 150; // The maximum distance for particles to heat up
+        let mouseX = -100, mouseY = -100; // Initialize off-screen
+
+        // Define the heatmap colors from cold to hot
+        const colors = [
+            { r: 105, g: 0, b: 105 },    // Dark purple (coldest)
+            { r: 255, g: 0, b: 255 }     // Magenta (hottest)
+        ];
+
+        // A helper function to linearly interpolate between colors
+        function lerpColor(color1, color2, factor) {
+            return {
+                r: Math.round(color1.r + (color2.r - color1.r) * factor),
+                g: Math.round(color1.g + (color2.g - color1.g) * factor),
+                b: Math.round(color1.b + (color2.b - color1.b) * factor)
+            };
+        }
+
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 2 + 0.5;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 0.5,
+                    y: (Math.random() - 0.5) * 0.5
+                };
+                this.heat = 0; // New property to store the heat value
+            }
+
+            // Update particle position
+            update() {
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                
+                // Slowly reduce the particle's heat over time
+                this.heat *= 0.99; 
+
+                // Wrap particles around the screen
+                if (this.x > width) this.x = 0;
+                if (this.x < 0) this.x = width;
+                if (this.y > height) this.y = 0;
+                if (this.y < 0) this.y = height;
+            }
+
+            // Draw particle
+            draw() {
+                // Calculate distance to cursor
+                const distToCursor = Math.sqrt(Math.pow(this.x - mouseX, 2) + Math.pow(this.y - mouseY, 2));
+                const heatFactor = 1 - Math.min(distToCursor / heatDistance, 1);
+                
+                // Increase particle heat if cursor is close
+                if (heatFactor > 0) {
+                    this.heat = Math.max(this.heat, heatFactor);
+                }
+
+                // Get the correct colors for interpolation based on the particle's current heat
+                const colorIndex = Math.floor(this.heat * (colors.length - 1));
+                const blendFactor = (this.heat * (colors.length - 1)) % 1;
+                const blendedColor = lerpColor(colors[colorIndex], colors[colorIndex + 1], blendFactor);
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${blendedColor.r}, ${blendedColor.g}, ${blendedColor.b}, 0.8)`;
+                ctx.fill();
+            }
+        }
+
+        // Function to connect particles with lines
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectDistance) {
+                        const opacity = 1 - (distance / connectDistance);
+                        
+                        // Calculate heat for the line based on average heat of connected particles
+                        const avgHeat = (particles[i].heat + particles[j].heat) / 2;
+                        
+                        // Get the correct colors for interpolation based on avg heat
+                        const colorIndex = Math.floor(avgHeat * (colors.length - 1));
+                        const blendFactor = (avgHeat * (colors.length - 1)) % 1;
+                        const blendedColor = lerpColor(colors[colorIndex], colors[colorIndex + 1], blendFactor);
+                        
+                        ctx.strokeStyle = `rgba(${blendedColor.r}, ${blendedColor.g}, ${blendedColor.b}, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function init() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            
+            particles.length = 0; // Clear particles on resize
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Reduced opacity for a trail effect
+            ctx.fillRect(0, 0, width, height);
+
+            connectParticles();
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+        }
+
+        window.onload = () => {
+            init();
+            animate();
+        };
+
+        window.addEventListener('resize', init);
+        window.addEventListener('mousemove', (event) => {
+            // Adjust coordinates to account for the canvas covering the whole window
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        });
+
+        // Hamburger menu functionality
+        const hamburgerIcon = document.getElementById('hamburgerIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        hamburgerIcon.addEventListener('click', () => {
+            hamburgerIcon.classList.toggle('active');
+            dropdownMenu.classList.toggle('visible');
+        });
+
+        // Close dropdown when a menu item is clicked
+        dropdownMenu.addEventListener('click', (event) => {
+            // Check if the clicked element is the About text or the Logic button.
+            // The About text is now a div, not a button.
+            if (event.target.closest('button')) {
+                hamburgerIcon.classList.remove('active');
+                dropdownMenu.classList.remove('visible');
+            }
+        });
+
+        // ---- Typing Effect ----
+        const textElement = document.getElementById('typed-text');
+        const textToType = "CampusSense.";
+        let textIndex = 0;
+        let isDeleting = false;
+
+        function typeText() {
+            const currentText = isDeleting
+                ? textToType.substring(0, textIndex)
+                : textToType.substring(0, textIndex + 1);
+            
+            textElement.innerHTML = currentText + '<span class="typing-cursor">_</span>';
+
+            if (!isDeleting && textIndex < textToType.length) {
+                textIndex++;
+            } else if (isDeleting && textIndex >= 0) {
+                textIndex--;
+            }
+
+            let typingSpeed = 100;
+            if (isDeleting) {
+                typingSpeed = 75; // Slower backspace speed
+            }
+
+            if (!isDeleting && textIndex === textToType.length) {
+                // Typed the whole word, wait 2 seconds, then start deleting
+                setTimeout(() => {
+                    isDeleting = true;
+                    typeText();
+                }, 2000);
+            } else if (isDeleting && textIndex < 0) {
+                // Deleted the whole word, wait 1 second, then start typing again
+                isDeleting = false;
+                textIndex = 0;
+                setTimeout(() => {
+                    typeText();
+                }, 1000);
+            } else {
+                // Continue typing or deleting
+                setTimeout(typeText, typingSpeed);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', typeText);
+    </script>
+</body>
+</html>
